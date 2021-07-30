@@ -3,7 +3,9 @@ package com.example.browser;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     ImageButton homeButton, searchButton;
     EditText addressInput;
     WebView webView;
+    ImageView imageView;
+    Drawable drawble;
+    boolean completelyLoaded = true, redirect= false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
         addressInput=findViewById(R.id.address_input);
         webView=findViewById(R.id.web_view);
         searchButton=findViewById(R.id.search_btn);
-
+        imageView=findViewById(R.id.loading);
+        drawble=getResources().getDrawable(R.drawable.loading);
+        imageView.setImageDrawable(drawble);
         webView.loadUrl("https://www.google.com");
         webView.getSettings().setJavaScriptEnabled(true);
 
@@ -100,16 +108,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+                completelyLoaded=false;
+                imageView.setVisibility(View.VISIBLE);
+                Log.d("completelyLoaded", completelyLoaded+"");
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                if(!completelyLoaded){
+                    redirect=true;
+                }
+                completelyLoaded=false;
                 return super.shouldOverrideUrlLoading(view, request);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                if(!redirect){
+                    completelyLoaded=true;
+                    imageView.setVisibility(View.GONE);
+                }
+                if(completelyLoaded && !redirect){
+                    Log.d("completelyLoaded", completelyLoaded+"");
+                }
+                else{
+                    redirect=false;
+                }
             }
         });
 

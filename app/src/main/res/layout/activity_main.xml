@@ -37,11 +37,22 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_search"
             android:background="@android:color/transparent"/>
+
     </LinearLayout>
 
     <WebView
         android:id="@+id/web_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        />
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:id="@+id/loading"
+        android:elevation="1000dp"
+        android:layout_marginTop="-500dp"
+        android:layout_gravity="center"
+        android:alpha="0.5"
+        />
 
 </LinearLayout>
