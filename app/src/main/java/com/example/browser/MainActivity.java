@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -23,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         homeButton=findViewById(R.id.home_btn);
         addressInput=findViewById(R.id.address_input);
@@ -46,17 +51,23 @@ public class MainActivity extends AppCompatActivity {
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-
             public void onClick(View v) {
                 webView.loadUrl("https://www.google.com/");
                 addressInput.setText("");
+                addressInput.setCursorVisible(false);
             }
 
         });
-
+        addressInput.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                addressInput.setCursorVisible(true);
+            }
+        });
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addressInput.setCursorVisible(false);
                 if(!addressInput.getText().toString().isEmpty()){
                     String url=addressInput.getText().toString();
 
@@ -106,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        addressInput.setCursorVisible(false);
         if(webView.canGoBack()){
             webView.goBack();
         }
